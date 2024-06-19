@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Orçamento Paulinho-Car</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Gerar Orçamento</h1>
+    <form id="pdf-form">
+        <label>Cliente: <input type="text" id="cliente"></label><br>
+        <label>Telefone: <input type="text" id="telefone"></label><br>
+        <label>Veículo: <input type="text" id="veiculo"></label><br>
+        <label>Chassi: <input type="text" id="chassi"></label><br>
+        <label>Cor: <input type="text" id="cor"></label><br>
+        <label>Placa: <input type="text" id="placa"></label><br>
+        <label>Ano: <input type="text" id="ano"></label><br>
+        <label>OBS: <input type="text" id="obs"></label><br>
+        <h2>Itens</h2>
+        <div id="itens">
+            <div class="item">
+                <label>Quantidade: <input type="number" class="qtdd"></label>
+                <label>Descrição: <input type="text" class="descricao"></label>
+                <label>Preço Unitário: <input type="text" class="preco_un"></label>
+                <label>Total: <input type="text" class="total" readonly></label><br>
+            </div>
+        </div>
+        <button type="button" onclick="addItem()">Adicionar Item</button><br>
+        <label>Acréscimo: <input type="text" id="acrescimo"></label><br>
+        <label>Desconto: <input type="text" id="desconto"></label><br>
+        <label>Total Geral: <input type="text" id="total_geral" readonly></label><br>
+        <button type="button" onclick="generatePDF()">Gerar PDF</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,8 +1,10 @@
+// script.js
+
 async function generatePDF() {
     const { PDFDocument, rgb } = PDFLib;
 
     // Fetch the existing PDF
-    const existingPdfBytes = await fetch('orcamento-vazio.pdf').then(res => res.arrayBuffer());
+    const existingPdfBytes = await fetch('ORCAMENTO-VAZIO.pdf').then(res => res.arrayBuffer());
 
     // Load a PDFDocument from the existing PDF bytes
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -22,6 +24,10 @@ async function generatePDF() {
     const acrescimo = document.getElementById('acrescimo').value;
     const desconto = document.getElementById('desconto').value;
     const totalGeral = document.getElementById('total_geral').value;
+
+    // Get current date
+    const today = new Date();
+    const dateStr = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
 
     // Draw text on the PDF (customize the coordinates to fit your template)
     page.drawText(cliente, { x: 74, y: 679, size: 12, color: rgb(0, 0, 0) });
@@ -46,22 +52,46 @@ async function generatePDF() {
         page.drawText(precoUn, { x: 384, y: yPosition, size: 12, color: rgb(0, 0, 0) });
         page.drawText(total, { x: 473, y: yPosition, size: 12, color: rgb(0, 0, 0) });
 
-        yPosition -= 14;
+        yPosition -= 15;
     }
 
     page.drawText(acrescimo, { x: 482, y: 157, size: 12, color: rgb(0, 0, 0) });
     page.drawText(desconto, { x: 482, y: 169, size: 12, color: rgb(0, 0, 0) });
     page.drawText(totalGeral, { x: 482, y: 140, size: 13, color: rgb(0, 0, 0) });
 
+    // Draw the current date
+    page.drawText(dateStr, { x: 514, y: 754, size: 10, color: rgb(189 / 255, 179 / 255, 38 / 255) });
+
     // Serialize the PDFDocument to bytes (a Uint8Array)
     const pdfBytes = await pdfDoc.save();
+
+    // Get initials from the client's name
+    const initials = cliente.split(' ').map(word => word.charAt(0)).join('');
+
+    // Format the filename
+    const filename = `${initials}_${veiculo}.pdf`;
 
     // Trigger the browser to download the PDF document
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'filled_template.pdf';
+    link.download = filename;
     link.click();
+
+    // Check if the Web Share API is supported
+    if (navigator.share) {
+        navigator.share({
+            title: 'Orçamento',
+            text: 'Veja o orçamento gerado:',
+            files: [new File([blob], filename, { type: 'application/pdf' })],
+        }).then(() => {
+            console.log('Compartilhamento concluído com sucesso.');
+        }).catch((error) => {
+            console.error('Erro ao compartilhar:', error);
+        });
+    } else {
+        alert('Compartilhamento não suportado no seu navegador. Por favor, compartilhe manualmente.');
+    }
 }
 
 // Função para calcular o total de cada item

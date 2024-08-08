@@ -4,7 +4,7 @@ async function generatePDF() {
     const { PDFDocument, rgb } = PDFLib;
 
     // Fetch the existing PDF
-    const existingPdfBytes = await fetch('ORCAMENTO-VAZIO.pdf').then(res => res.arrayBuffer());
+    const existingPdfBytes = await fetch('orcamento-vazio.pdf').then(res => res.arrayBuffer());
 
     // Load a PDFDocument from the existing PDF bytes
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
